@@ -1,7 +1,0 @@
-model_config,pressure,mean_temp,std_temp,lower_bound,upper_bound
-"w1:quadT_quadP, w2:quadT_linear_TP, w3/5:linear_P, w4:invT_linear_TP",150,3771.39393939394,123.67224672388588
-"w1:quadT_quadP, w2:quadT_linear_TP, w3/5:linear_P, w4:invT_linear_TP",200,3841.090909090909,117.69309983339302
-"w1:quadT_quadP, w2:quadT_linear_TP, w3/5:linear_P, w4:invT_linear_TP",400,4062.424242424242,116.15353507244424
-"w1:quadT_quadP, w2:quadT_linear_TP, w3/5:linear_P, w4:invT_linear_TP",600,4188.727272727272,144.5553519259373
-"w1:quadT_quadP, w2:quadT_linear_TP, w3/5:linear_P, w4:invT_linear_TP",800,4234.060606060607,175.26530853153926
-"w1:quadT_quadP, w2:quadT_linear_TP, w3/5:linear_P, w4:invT_linear_TP",1000,4240.969696969697,185.88802577552372
