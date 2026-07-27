@@ -1,0 +1,72 @@
+###############################################################################
+# VARIABLES
+###############################################################################
+clear
+variable dt              equal  0.0002                # timestep (ps) - for reference only, i-PI actually sets the value
+variable intThermo       equal  100                   # screen output frequency (lower to reduce I/O)
+variable numSteps        equal  400000                # total number of steps (or termination via i-PI exit signal)
+variable mass2           equal  4.00026               # mass for element 2 (He)
+variable mass1           equal  1.0080                # mass for element 1 (H)
+
+# Set initial velocity distribution
+variable initTemp        equal  2000                  # initial temperature (K)
+variable velSeed         equal  202602                # random seed
+
+###############################################################################
+# SETUP
+###############################################################################
+units metal
+boundary p p p
+atom_style atomic
+
+# Read restart file
+# Note: i-PI will immediately overwrite coordinates, but this is required for atom count, box info, and topology
+read_restart restart_file.restart
+
+# Redefine masses (in case restart file lost the info)
+mass 1 ${mass1}
+mass 2 ${mass2}
+
+# Define groups
+group h type 1
+group he type 2
+
+# Neighbor list settings
+# Adjusting delay/check can optimize Comm% slightly, but reducing core count has a bigger impact
+neighbor       2.0 bin
+neigh_modify   every 1 delay 0 check yes
+
+# --------------------- Potential definition ---------------------
+# Ensure this path is correct and that it includes pair_style nnp if using N2P2
+include /global/home/users/xiaoyuwang/HHe_system_size_vdw/HHe.pp
+
+###############################################################################
+# i-PI CLIENT CONNECTION
+###############################################################################
+
+# 1. Reset timestep counter (optional, keeps log neat)
+reset_timestep 0
+
+# 2. Set timestep
+timestep ${dt}
+
+# 3. Initialize velocities (only effective for initial run, i-PI sends new velocities after connecting)
+velocity all create ${initTemp} ${velSeed} dist gaussian
+
+# 4. Output settings
+# Output step, potential energy, pressure, volume, and box lengths.
+thermo ${intThermo}
+thermo_style custom step pe press vol lx ly lz
+
+# 5. Launch i-PI driver
+fix ipi all ipi n0096.savio4 31415
+
+###############################################################################
+# RUN
+###############################################################################
+
+# Run until i-PI exit signal or numSteps is reached
+run ${numSteps}
+
+# Cleanup
+unfix ipi

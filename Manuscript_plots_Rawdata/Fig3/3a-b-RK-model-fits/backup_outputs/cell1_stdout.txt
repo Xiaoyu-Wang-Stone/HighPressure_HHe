@@ -1,0 +1,10 @@
+No data for P=150 and T=10000
+No data for P=150 and T=11000
+No data for P=150 and T=12000
+No data for P=200 and T=11000
+No data for P=200 and T=12000
+No data for P=400 and T=11000
+No data for P=600 and T=10000
+No data for P=600 and T=11000
+No data for P=600 and T=12000
+No data for P=800 and T=12000

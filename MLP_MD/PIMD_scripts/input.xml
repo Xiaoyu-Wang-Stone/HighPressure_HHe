@@ -1,0 +1,48 @@
+<simulation verbosity='high'>
+  <output prefix='HHe_PIMD_2000K'>
+    <properties stride='100' filename='out'> [ step, time{picosecond}, conserved{electronvolt}, temperature{kelvin}, kinetic_cv{electronvolt}, potential{electronvolt}, pressure_cv{bar} ] </properties>
+    
+    <trajectory filename='pos_centroid' stride='500' format='xyz'> x_centroid{angstrom} </trajectory>
+    
+    <checkpoint stride='20000' overwrite='true'/>
+  </output>
+
+  <total_steps> 400000 </total_steps>
+
+  <prng>
+    <seed> 202602 </seed>
+  </prng>
+
+  <ffsocket name='lammps_driver' mode='inet' pbc='true'>
+      <address>localhost</address> 
+      <port>31415</port>
+      <latency> 1e-4 </latency>
+  </ffsocket>
+
+  <system>
+    <initialize nbeads='8'>
+      <file mode='xyz' units='angstrom'> start.xyz </file>
+      
+      <cell mode='abc' units='angstrom'> [XXX, XXX, XXX] </cell>
+
+      <velocities mode='thermal' units='kelvin'> 2000 </velocities>
+    </initialize>
+
+    <forces>
+      <force forcefield='lammps_driver'></force>
+    </forces>
+
+    <ensemble>
+      <temperature units='kelvin'> 2000 </temperature>
+    </ensemble>
+
+    <motion mode='dynamics'>
+      <dynamics mode='nvt'>
+        <thermostat mode='pile_l'>
+          <tau units="femtosecond"> 50.0 </tau>
+        </thermostat>
+        <timestep units='femtosecond'> 0.20 </timestep>
+      </dynamics>
+    </motion>
+  </system>
+</simulation>
